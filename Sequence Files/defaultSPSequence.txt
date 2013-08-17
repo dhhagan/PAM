@@ -1,0 +1,5 @@
+** PAM sequence file 07/25/13  ORDER: Label >> Channel >> Time Target >> Process Value**
+TC1	ai0	0:00	1
+TC2	ai1	0:15	4
+TC3	ai2	0:25	1
+TC3	ai2	1:15	0

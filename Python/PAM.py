@@ -62,35 +62,45 @@ def popDate(fileName):
 
 def getFile(date,regex):#Works
         files = []
-	files = sorted((glob.glob('*'+regex+'*')),key=numericalSort,reverse=True)
+	files = sorted((glob.glob('*'+regex+'*')),key=numericalSort,reverse=False)
 	if date.lower() == 'last':
-		files = files[0]
+		files = files.pop()
+		
 	else:
 	    files = [item for item in files if re.search(date,item)]
 
 	return files
 
-def plotConc(data,times):
+def plotConc(data,ozone,times):
         # This function plots data versus time 
 	import datetime as dt
 	from matplotlib import pyplot as plt
 	from matplotlib.dates import date2num
 
 	#time = [dt.datetime.strptime(time,"%m/%d/%Y %I:%M:%S %p") for time in times]
-        time = [dt.datetime.strptime(time,"%m/%d/%y %H:%M") for time in times]
+        time = [dt.datetime.strptime(time,"%m/%d/%Y %I:%M:%S %p") for time in times]
 	x = date2num(time)
-        legend_items = []
+        legend1 = []
+	legend2 = []
 	
-	fig = plt.figure('NO and NOx Readings for East St.Louis')
-	graph = fig.add_subplot(111)
+	fig = plt.figure('Gas Concentration Readings for East St.Louis')
+	ax1 = fig.add_subplot(111)
+	ax2 = twinx()
 	for key,value in data.items():
-                graph.plot_date(x,data[key],'-',xdate=True)
-                legend_items.append(key)
+                ax1.plot_date(x,data[key],'-',xdate=True)
+                legend1.append(key)
+        for key, value in ozone.items():
+            ax2.plot_date(x,ozone[key],'-.',xdate=True)
+            legend2.append(key)
 
-	title('NO and NOx Concentrations', fontsize = 12)
-	ylabel(r'$Concentration(ppm)$', fontsize = 12)
+	title('Gas Concentrations for East St. Louis', fontsize = 12)
+	ax1.set_ylabel(r'$Concentration(ppb)$', fontsize = 12)
+	ax2.set_ylabel(r'$Concentration(ppb)$', fontsize = 12)
 	xlabel(r"$Time \, Stamp$", fontsize = 12)
-	legend(legend_items)
+
+	ax1.legend(legend1,loc='upper right')
+	ax2.legend(legend2,loc='lower right')
+	
 	grid(True)
 
 	return 

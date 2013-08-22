@@ -22,8 +22,8 @@ dir = "C:/Users/David/Documents/GitHub/PAM/Python/"
 localtime = time.asctime(time.localtime(time.time()))
 
 # Enter the date (probably just HHMMSS) you want to analyze or type LAST if you want to grab the most recent file
-#date = 'LAST'	
-date = '20130820 1120'
+date = 'LAST'	
+#date = '20130820 1120'
 delim = '\t'
 
 # Change to the correct directory
@@ -32,15 +32,16 @@ if currentDir != dir:
     os.chdir(dir)
 
 # Get all the files to analyze
-files = PAM.getFile(date,'Gas')
-fileName = files[0]
+files = []
+files.append(PAM.getFile(date,'Gas'))
+
 
 totalLines = 0
 totalShortLines = 0
 
 
 lineCount = 0
-DATA, indexToName, lineNum, shortLines = PAM.analyzeFile(fileName,delim)	
+DATA, indexToName, lineNum, shortLines = PAM.analyzeFile(files[0],delim)	
 totalLines += lineNum
 totalShortLines += shortLines
 header = DATA.keys()
@@ -52,10 +53,13 @@ Timestamp = DATA['Time Stamp Local']
 NO = DATA['NO']
 NO2 = DATA['NO2']
 NOx = DATA['NOx']
-values = {'NO':NO, 'NOx':NOx, 'NO2':NO2}
+SO2 = DATA['SO2']
+O3 = DATA['O3']
+values = {'NO':NO, 'NOx':NOx, 'NO2':NO2, 'SO2':SO2}
+Ozone = {'O3':O3}
 end = time.time()
 
-#PAM.plotConc(values,Timestamp)
+PAM.plotConc(values,Ozone,Timestamp)
 
 print 'Files being analyzed this run:\n'
 for each in files:
